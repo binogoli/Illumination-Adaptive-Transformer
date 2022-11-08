@@ -36,7 +36,8 @@ if __name__ == "__main__":
 
     parser.add_argument('--num_epochs', type=int, default=400)
     parser.add_argument('--display_iter', type=int, default=10)
-    parser.add_argument('--snapshots_folder', type=str, default="workdirs/snapshots_folder_lol_v1_whole")
+
+    parser.add_argument('--snapshots_folder', type=str, default="./workdirs/snapshots_folder_lol_v1_whole")
 
     config = parser.parse_args()
 
