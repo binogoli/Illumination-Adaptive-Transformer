@@ -26,10 +26,12 @@ from utils import PSNR, adjust_learning_rate, validation, LossNetwork, visualiza
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument('--gpu_id', type=str, default=0)
-    parser.add_argument('--img_path', type=str, default='./data/our485/low/')
-    parser.add_argument('--img_val_path', type=str, default='./data/eval15/low/')
+    #parser.add_argument('--img_path', type=str, default='G:\\DeepLowLight\\dataset\\LISU_IAT\\train\\low\\')
+    parser.add_argument('--img_path', type=str, default='/kaggle/input/lisu-iat-dataset/LISU_IAT_dataset/train/low/')
+    #parser.add_argument('--img_val_path', type=str, default='G:\\DeepLowLight\\dataset\\LISU_IAT\\val\\low\\')
+    parser.add_argument('--img_val_path', type=str, default='/kaggle/input/lisu-iat-dataset/LISU_IAT_dataset/val/low/')
 
-    parser.add_argument('--batch_size', type=int, default=1)
+    parser.add_argument('--batch_size', type=int, default=12)
     parser.add_argument('--lr', type=float, default=1e-4)
     parser.add_argument('--weight_decay', type=float, default=0.0001)
     parser.add_argument('--pretrain_dir', type=str, default=None)
@@ -95,8 +97,8 @@ if __name__ == "__main__":
         for iteration, imgs in enumerate(train_loader):
             low_img, high_img = imgs[0].cuda(), imgs[1].cuda()
             # Checking!
-            # visualization(low_img, 'show/low', iteration)
-            # visualization(high_img, 'show/high', iteration)
+            #visualization(low_img, 'show/low', iteration)
+            #visualization(high_img, 'show/high', iteration)
             optimizer.zero_grad()
             model.train()
             mul, add, enhance_img = model(low_img)
