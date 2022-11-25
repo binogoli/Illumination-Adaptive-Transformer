@@ -29,7 +29,7 @@ if __name__ == "__main__":
     parser.add_argument('--img_path', type=str, default='./data/our485/low/')
     parser.add_argument('--img_val_path', type=str, default='./data/eval15/low/')
 
-    parser.add_argument('--batch_size', type=int, default=8)
+    parser.add_argument('--batch_size', type=int, default=1)
     parser.add_argument('--lr', type=float, default=1e-4)
     parser.add_argument('--weight_decay', type=float, default=0.0001)
     parser.add_argument('--pretrain_dir', type=str, default=None)
@@ -66,6 +66,8 @@ if __name__ == "__main__":
     device = next(model.parameters()).device
     print('the device is:', device)
 
+    print('注意当前batchsize的大小是:', config.batch_size)
+
     # Loss & Optimizer Setting & Metric
     vgg_model = vgg16(pretrained=True).features[:16]
     vgg_model = vgg_model.cuda()
@@ -80,8 +82,8 @@ if __name__ == "__main__":
     loss_network = LossNetwork(vgg_model)
     loss_network.eval()
 
-    ssim = SSIM()
-    psnr = PSNR()
+    # ssim = SSIM()
+    # psnr = PSNR()
     ssim_high = 0
     psnr_high = 0
 
