@@ -6,10 +6,10 @@ import os
 import math
 
 from timm.models.layers import trunc_normal_
-from blocks import CBlock_ln, SwinTransformerBlock
-#from model.blocks import CBlock_ln, SwinTransformerBlock
-from global_net import Global_pred
-#from model.global_net import Global_pred
+#from blocks import CBlock_ln, SwinTransformerBlock
+from model.blocks import CBlock_ln, SwinTransformerBlock
+#from global_net import Global_pred
+from model.global_net import Global_pred
 #from model.global_net import Global_pred
 
 class Local_pred(nn.Module):
