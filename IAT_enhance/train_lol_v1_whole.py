@@ -23,8 +23,8 @@ from utils import PSNR, adjust_learning_rate, validation, LossNetwork, visualiza
 
 parser = argparse.ArgumentParser()
 parser.add_argument('--gpu_id', type=str, default=0)
-parser.add_argument('--img_path', type=str, default='.\\LISU_IAT_dataset\\train\\low\\')
-parser.add_argument('--img_val_path', type=str, default='.\\LISU_IAT_dataset\\val\\low\\')
+parser.add_argument('--img_path', type=str, default='./LISU_IAT_dataset/train/low/')
+parser.add_argument('--img_val_path', type=str, default='./LISU_IAT_dataset/val/low/')
 
 parser.add_argument('--batch_size', type=int, default=1)
 parser.add_argument('--lr', type=float, default=1e-4)
