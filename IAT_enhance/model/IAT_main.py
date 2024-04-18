@@ -6,8 +6,11 @@ import os
 import math
 
 from timm.models.layers import trunc_normal_
+#from blocks import CBlock_ln, SwinTransformerBlock
 from model.blocks import CBlock_ln, SwinTransformerBlock
+#from global_net import Global_pred
 from model.global_net import Global_pred
+#from model.global_net import Global_pred
 
 class Local_pred(nn.Module):
     def __init__(self, dim=16, number=4, type='ccc'):
@@ -103,7 +106,7 @@ class IAT(nn.Module):
 
     def apply_color(self, image, ccm):
         shape = image.shape
-        image = image.view(-1, 3)
+        image = image.view(-1, 3)      #变成 x个数乘以3的形式
         image = torch.tensordot(image, ccm, dims=[[-1], [-1]])
         image = image.view(shape)
         return torch.clamp(image, 1e-8, 1.0)

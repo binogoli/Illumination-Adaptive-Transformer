@@ -14,22 +14,24 @@ from IQA_pytorch import SSIM, MS_SSIM
 from data_loaders.lol_v1_new import lowlight_loader_new
 from tqdm import tqdm
 
-parser = argparse.ArgumentParser()
-parser.add_argument('--gpu_id', type=str, default=0)
-parser.add_argument('--save', type=bool, default=True)
-parser.add_argument('--img_val_path', type=str, default=r'G:\dataset\LISU_LLRGBD_real\val_rgb_l')
-config = parser.parse_args()
-
-print(config)
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
+    parser = argparse.ArgumentParser()
+    parser.add_argument('--gpu_id', type=str, default=0)
+    parser.add_argument('--save', type=bool, default=True)
+    parser.add_argument('--img_val_path', type=str,
+                        #default=r'C:\Users\bingo\Desktop\IAT\IAT_enhance\LISU_IAT_dataset\val\low')
+                        default='./LISU_IAT_dataset/val/low/')
+    config = parser.parse_args()
+
+    print(config)
     val_dataset = lowlight_loader_new(images_path=config.img_val_path, mode='test')
-    val_loader = torch.utils.data.DataLoader(val_dataset, batch_size=1, shuffle=False, num_workers=8, pin_memory=True)
+    val_loader = torch.utils.data.DataLoader(val_dataset, batch_size=1, shuffle=False, num_workers=2, pin_memory=True)
     os.environ['CUDA_VISIBLE_DEVICES'] = str(config.gpu_id)
 
     model = IAT().cuda()
-    model.load_state_dict(torch.load("best_Epoch_LISU.pth"))
+    model.load_state_dict(torch.load(r"C:\Users\bingo\Desktop\IAT\IAT_enhance\LISU数据训练结果\best_Epoch.pth"))
     model.eval()
 
     ssim = SSIM()

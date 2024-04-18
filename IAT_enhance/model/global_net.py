@@ -4,6 +4,7 @@ import torch.nn as nn
 from timm.models.layers import trunc_normal_, DropPath, to_2tuple
 import os
 from model.blocks import Mlp
+#from blocks import Mlp
 
 
 class query_Attention(nn.Module):
@@ -90,34 +91,34 @@ class Global_pred(nn.Module):
         self.color_base = nn.Parameter(torch.eye((3)), requires_grad=True)  # basic color matrix
         # main blocks
         self.conv_large = conv_embedding(in_channels, out_channels)
+        print("outchannel" , out_channels)
         self.generator = query_SABlock(dim=out_channels, num_heads=num_heads)
         self.gamma_linear = nn.Linear(out_channels, 1)
         self.color_linear = nn.Linear(out_channels, 1)
 
-        self.apply(self._init_weights)
+        self.apply(self._init_weights)  # 使用网络的apply方法进行权重初始化
 
-        for name, p in self.named_parameters():
+        for name, p in self.named_parameters():   # model.named_parameters()，返回各层中参数名称和数据。
             if name == 'generator.attn.v.weight':
-                nn.init.constant_(p, 0)
+                nn.init.constant_(p, 0)     # 用常数 val 的值填充输入的张量或变量
 
     def _init_weights(self, m):
-        if isinstance(m, nn.Linear):
+        if isinstance(m, nn.Linear):    # isinstance() 函数来判断一个对象是否是一个已知的类型
             trunc_normal_(m.weight, std=.02)
             if isinstance(m, nn.Linear) and m.bias is not None:
-                nn.init.constant_(m.bias, 0)
+                nn.init.constant_(m.bias, 0)  # 用常数 val 的值填充输入的张量或变量
         elif isinstance(m, nn.LayerNorm):
             nn.init.constant_(m.bias, 0)
             nn.init.constant_(m.weight, 1.0)
 
-
     def forward(self, x):
         #print(self.gamma_base)
         x = self.conv_large(x)
-        x = self.generator(x)
-        gamma, color = x[:, 0].unsqueeze(1), x[:, 1:]
-        gamma = self.gamma_linear(gamma).squeeze(-1) + self.gamma_base
-        #print(self.gamma_base, self.gamma_linear(gamma))
-        color = self.color_linear(color).squeeze(-1).view(-1, 3, 3) + self.color_base
+        x = self.generator(x)  # x [8, 10, 64]
+
+        gamma, color = x[:, 0].unsqueeze(1), x[:, 1:]  # gamma [8, 1, 64] color [8, 9, 64]
+        gamma = self.gamma_linear(gamma).squeeze(-1) + self.gamma_base   #gamma [8, 1]
+        color = self.color_linear(color).squeeze(-1).view(-1, 3, 3) + self.color_base # color  [8, 3, 3]
         return gamma, color
 
 if __name__ == "__main__":
