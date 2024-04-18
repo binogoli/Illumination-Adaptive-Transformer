@@ -12,6 +12,8 @@ from IQA_pytorch import SSIM, MS_SSIM
 import matplotlib.pyplot as plt
 import torch.distributed as dist
 
+import torchvision
+
 EPS = 1e-3
 PI = 22.0 / 7.0
 # calculate PSNR
@@ -97,6 +99,8 @@ def validation(model, val_loader):
         with torch.no_grad():
             low_img, high_img = imgs[0].cuda(), imgs[1].cuda()
             _, _, enhanced_img = model(low_img)
+            filepath = os.path.join('./result', '{}.png'.format(str(imgs[2]).split('\'')[1]))
+            torchvision.utils.save_image(enhanced_img.data, filepath, padding=0)
             # print(enhanced_img.shape)
         ssim_value = ssim(enhanced_img, high_img, as_loss=False).item()
         #ssim_value = ssim(enhanced_img, high_img).item()

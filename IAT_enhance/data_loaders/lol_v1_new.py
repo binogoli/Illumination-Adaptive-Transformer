@@ -15,7 +15,7 @@ random.seed(1143)
 
 def populate_train_list(images_path, mode='train'):
     # print(images_path)
-    image_list_lowlight = glob(images_path + '*.png')
+    image_list_lowlight = glob(images_path + '\\*.png')
     train_list = image_list_lowlight
     if mode == 'train':
         random.shuffle(train_list)
@@ -36,7 +36,7 @@ class lowlight_loader_new(data.Dataset):
         ps = 256 # Training Patch Size 
         if self.mode == 'train':
             data_lowlight = Image.open(data_lowlight_path).convert('RGB')
-            data_highlight = Image.open(data_lowlight_path.replace('low', 'high')).convert('RGB')
+            data_highlight = Image.open(data_lowlight_path.replace('val_rgb_l', 'val_rgb_h')).convert('RGB')
             w, h = data_lowlight.size
             data_lowlight = TF.to_tensor(data_lowlight)
             data_highlight = TF.to_tensor(data_highlight)
@@ -94,7 +94,7 @@ class lowlight_loader_new(data.Dataset):
 
         elif self.mode == 'test':
             data_lowlight = Image.open(data_lowlight_path).convert('RGB')
-            data_highlight = Image.open(data_lowlight_path.replace('low', 'high')).convert('RGB')
+            data_highlight = Image.open(data_lowlight_path.replace('val_rgb_l', 'val_rgb_h')).convert('RGB')
             
             data_lowlight = TF.to_tensor(data_lowlight)
             data_highlight = TF.to_tensor(data_highlight)

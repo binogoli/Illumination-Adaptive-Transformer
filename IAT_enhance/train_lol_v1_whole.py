@@ -23,13 +23,13 @@ from utils import PSNR, adjust_learning_rate, validation, LossNetwork, visualiza
 
 parser = argparse.ArgumentParser()
 parser.add_argument('--gpu_id', type=str, default=0)
-parser.add_argument('--img_path', type=str, default='/data/unagi0/cui_data/light_dataset/LOL_v1/our485/low/')
-parser.add_argument('--img_val_path', type=str, default='/data/unagi0/cui_data/light_dataset/LOL_v1/eval15/low/')
+parser.add_argument('--img_path', type=str, default='.\\LISU_IAT_dataset\\train\\low\\')
+parser.add_argument('--img_val_path', type=str, default='.\\LISU_IAT_dataset\\val\\low\\')
 
-parser.add_argument('--batch_size', type=int, default=8)
+parser.add_argument('--batch_size', type=int, default=1)
 parser.add_argument('--lr', type=float, default=1e-4)
 parser.add_argument('--weight_decay', type=float, default=0.0001)
-parser.add_argument('--pretrain_dir', type=str, default='workdirs/snapshots_folder_lol_v1_patch/best_Epoch.pth')
+parser.add_argument('--pretrain_dir', type=str, default=None)
 
 parser.add_argument('--num_epochs', type=int, default=400)
 parser.add_argument('--display_iter', type=int, default=10)
@@ -44,16 +44,18 @@ if not os.path.exists(config.snapshots_folder):
     os.makedirs(config.snapshots_folder)
 
 # Model Setting
+
 model = IAT().cuda()
+
 if config.pretrain_dir is not None:
     model.load_state_dict(torch.load(config.pretrain_dir))
 
 # Data Setting
 train_dataset = lowlight_loader_new(images_path=config.img_path)
-train_loader = torch.utils.data.DataLoader(train_dataset, batch_size=config.batch_size, shuffle=True, num_workers=8,
+train_loader = torch.utils.data.DataLoader(train_dataset, batch_size=config.batch_size, shuffle=True,
                                            pin_memory=True)
 val_dataset = lowlight_loader_new(images_path=config.img_val_path, mode='test')
-val_loader = torch.utils.data.DataLoader(val_dataset, batch_size=1, shuffle=False, num_workers=8, pin_memory=True)
+val_loader = torch.utils.data.DataLoader(val_dataset, batch_size=1, shuffle=False,  pin_memory=True)
 
 optimizer = torch.optim.Adam(model.parameters(), lr=config.lr, betas=(0.9, 0.999), eps=1e-8, weight_decay=config.weight_decay)
 scheduler = torch.optim.lr_scheduler.CosineAnnealingLR(optimizer, T_max=config.num_epochs)
